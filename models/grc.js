@@ -1,25 +1,14 @@
 const mongoose = require("mongoose");
 
+
+// grcSchema is a model that stores data of all the groceries items
 const grcSchema = new mongoose.Schema({
-  grocery: {
-    type: String,
-    unique: true,
-    required: true
-  }
+  items: [{
+    name: {type: String, unique: true}, 
+    dates: {type: Array}
+  }]
 })
 
-// const todoSchema = new mongoose.Schema({
-//   task: {
-//     type: String,
-//     unique: true,
-//     required: true
-//   },
-//   completed: {
-//     type: Boolean,
-//     default: false
-//   }
-// });
+const grcModel = mongoose.model("Grc", grcSchema);
+module.exports = grcModel;
 
-// const todoModel = mongoose.model("Todo", todoSchema);
-
-// module.exports = todoModel;
