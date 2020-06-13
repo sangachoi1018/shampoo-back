@@ -15,10 +15,13 @@ function success(res, payload) {
 const todoRouter = require("./routes/todo")
 const indexRouter = require("./routes/index")
 const grcRouter = require("./routes/grc")
+const entRouter = require("./routes/entry")
 
 app.use('/', indexRouter)
 app.use('/todos', todoRouter)
 app.use('/grc', grcRouter)
+app.use('/grc', entRouter)
+
 
 app.use((err, req, res, next) => {
   return res.status(err.status || 400).json({

@@ -18,3 +18,7 @@ mongoose.Promise = Promise;
 
 module.exports.Todo = require("./todo");
 module.exports.Grc = require("./grc");
+
+const { entryModel, entrySchema } = require("./entry");
+module.exports.Entry = entryModel;
+module.exports.entrySchema = entrySchema;
