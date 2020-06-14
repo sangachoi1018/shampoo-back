@@ -4,12 +4,12 @@ import axios from "axios"
 import Form from "./Form"
 
 
-import "./ShoppingList.css"
+import "./ShoppingList.css";
 import GrcList from "./GrcList";
-const API_URL = "http://localhost:3000/grc/"
+const API_URL = "http://localhost:3000/grc/";
+const basket_API_URL = "http://localhost:3000/todos/";
 
-
-class GrcChips extends Component{
+class GrcChips extends Component {
 
   state = {
     input: '',
@@ -59,18 +59,12 @@ class GrcChips extends Component{
   }
 
   handleToggle = (id) => {
-
     const { items } = this.state;
     const index = items.findIndex(item =>
       item._id.toString() == id.toString());
     const selected = items[index]; // 선택한 객체  
-    console.log(selected.name);
     this.props.handleSelector(selected);
 
-    this.setState({
-      selectedItem
-        : selected
-    });
   }
 
   addBasket = (id) => {
@@ -78,70 +72,101 @@ class GrcChips extends Component{
     const index = items.findIndex(item =>
       item._id.toString() == id.toString());
     const selected = items[index]; // 선택한 객체    
-    const nextItems = [...items]; // 배열을 복사
-    nextItems[index] = {
-      ...selected,
-      inBasket: !selected.inBasket
-    };
+    console.log(`deleting ${selected.name}`);
+    console.log(`deleting ${selected.inBasket}`);
 
 
-    this.setState({
-      items: nextItems
-    });
-  }
+    const { removeFromBasket } = this.props;
 
-  handleRemove = (id) => {
-    const { items } = this.state;
-    axios.delete(`${API_URL}${id}`)
-      .then(res => {
-        const newItems = items.filter(
-          item => item._id.toString() !== id.toString());
-        this.setState({
-          items: newItems
-        });
-      })
-  }
 
-  // componentDidMount() {
-  //   axios.get(API_URL)
-  //     .then(res => {
-  //       const items = res.data;
-  //       this.setState({ items });
-  //     })
-  // }
+    if (selected.inBasket) {
+      axios.delete(`${basket_API_URL}${id}`)
+        .then(res => {
+          console.log(`deleted ${selected.name}`);
 
-  render() {
-    const { input, items } = this.state;
+          const nextItems = [...items]
 
-    const {
-      handleChange,
-      handleCreate,
-      handleKeyPress,
-      handleRemove,
-      handleToggle,
-      addBasket
-    } = this;
+          nextItems[index] = {
+            ...selected,
+            inBasket: !selected.inBasket
+          };
+          removeFromBasket(id)
+          this.setState({
+            items: nextItems
+          });
+        })
+    }
+    else {
+      addToBasket();
 
-    return ( 
-      <div>
-        <h1>식료품 관리</h1>
-        <Form
-          value={input}
-          onKeyPress={handleKeyPress}
-          onChange={handleChange}
-          onCreate={handleCreate}
-        />
+      const nextItems = [...items]
 
-        <GrcList
-          items={items}
-          onToggle={handleToggle}
-          onRemove={handleRemove}
-          addBasket={addBasket}
-        />
-        
-      </div>
-    )
-  }
+      nextItems[index] = {
+        ...selected,
+        inBasket: !selected.inBasket
+      };
+
+      this.setState({
+        items: nextItems
+      });
+
+    }
+
+}
+
+
+handleRemove = (id) => {
+  const { items } = this.state;
+  axios.delete(`${API_URL}${id}`)
+    .then(res => {
+      const newItems = items.filter(
+        item => item._id.toString() !== id.toString());
+      this.setState({
+        items: newItems
+      });
+    })
+}
+
+componentDidMount() {
+  axios.get(API_URL)
+    .then(res => {
+      const items = res.data;
+      this.setState({ items });
+    })
+}
+
+render() {
+  const { input, items } = this.state;
+
+  const {
+    handleChange,
+    handleCreate,
+    handleKeyPress,
+    handleRemove,
+    handleToggle,
+    addBasket
+  } = this;
+
+  return (
+    <div>
+      <h1>식료품 관리</h1>
+      <Form
+        value={input}
+        onKeyPress={handleKeyPress}
+        onChange={handleChange}
+        onCreate={handleCreate}
+      />
+
+      <GrcList
+        items={items}
+        onToggle={handleToggle}
+        onRemove={handleRemove}
+        addBasket={addBasket}
+      />
+
+    </div>
+  )
+}
 
 
 }

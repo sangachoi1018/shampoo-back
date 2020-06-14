@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios"
 import "./ShoppingList.css"
+import GrcState from "./GrcState"
 import EntryList from "./EntryList"
 import Form from "./Form"
 const API_URL = "http://localhost:3000/grc/"
@@ -8,8 +9,12 @@ const API_URL = "http://localhost:3000/grc/"
 export default class Record extends Component {
   state = {
     input: '',
-    itemId: this.props._id
   }
+
+  // shouldComponentUpdate(nextProps) {
+  //   return nextProps.selectedItem !== this.props.selectedItem
+  // }  
+
 
   handleChange = (e) => {
     this.setState({
@@ -20,7 +25,8 @@ export default class Record extends Component {
 
   handleCreate = () => {
     const { input } = this.state;
-    const { name, entries, _id } = this.props;
+    const { selectedItem } = this.props;
+    const { name, entries, _id } = selectedItem;
     if (!input) {
       alert("뭔가 입력한 후 추가해주세요");
       return;
@@ -34,22 +40,16 @@ export default class Record extends Component {
       return;
     }
 
-    console.log("handlecreate");
-    console.log(`${name} ${entries}` );
-
-
-    
-
     axios.put(`${API_URL}${_id}/entries`, { date: new Date(input), unit: 1, memo: "" })
       .then(res => {
         const newEntries = res.data
         console.log(newEntries);
-        
+
         this.setState({
           input: '',
         });
       })
-      
+
   }
 
   handleKeyPress = (e) => {
@@ -69,7 +69,8 @@ export default class Record extends Component {
 
 
   render() {
-    const { name, entries } = this.props;
+    const { selectedItem } = this.props;
+    const { name, entries, _id } = selectedItem;
     const { input } = this.state;
     const {
       handleChange,
@@ -79,33 +80,30 @@ export default class Record extends Component {
       handleToggle
     } = this;
 
-    if (name == undefined) {
-      return (
-        <div>
-          <h1>기록장</h1>
-          <h3>물품을 선택하세요</h3>
-        </div>
-
-      )
-    }
 
     return (
       <div>
         <h1>기록장</h1>
-        <h3>{name}</h3>
-        <h3> 구입한 날짜 </h3>
-        <Form
-          value={input}
-          onKeyPress={handleKeyPress}
-          onChange={handleChange}
-          onCreate={handleCreate}
-        />
+        <GrcState selectedItem={selectedItem} />
 
-        <EntryList
-          entries={entries}
-          onToggle={handleToggle}
-          onRemove={handleRemove}
-        />
+        {name ?
+          <div>
+            <Form
+              value={input}
+              onKeyPress={handleKeyPress}
+              onChange={handleChange}
+              onCreate={handleCreate}
+            />
+
+            <EntryList
+              entries={entries}
+              selectedItem={selectedItem}
+              onToggle={handleToggle}
+              onRemove={handleRemove}
+            />
+          </div>
+          : <div />
+        }
 
       </div>
     )

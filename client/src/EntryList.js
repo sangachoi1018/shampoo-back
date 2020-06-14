@@ -4,17 +4,18 @@ import Entry from "./Entry"
 export default class EntryList extends Component {
 
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.dates !== nextProps.dates;
-  }
+  shouldComponentUpdate(nextProps) {
+    return nextProps.selectedItem !== this.props.selectedItem
+  }  
 
 
   render() {
-    const { entries, onToggle, onRemove } = this.props;
-    console.log(entries);
+    const { entries, onToggle, onRemove, selectedItem } = this.props;
     
     const entryList = entries.map(
       ({ date, memo, unit, _id }) => (
+
+        
         <Entry
           id={_id}
           date={date}

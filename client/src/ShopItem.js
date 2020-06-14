@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import './Item.css';
 
-class Grc extends Component {
+class ShopItem extends Component {
 
   render() {
-    const { item, onClick, onRemove, addBasket } = this.props;
-    const { _id, name, _, inBasket} = item;
+    const { item, onClick, onRemove } = this.props;
+    const { text, checked, _id } = item;
 
-    
+
     return (
       <div
+        key={_id}
         onClick={() => onClick(_id)}
         className="todo-item"
       >
@@ -20,20 +21,16 @@ class Grc extends Component {
         }
         }>&times;</div>
 
-        <div className={`todo-text`}>
-          {name}
+        <div className={`todo-text ${checked && 'checked'}`}>
+          {text}
         </div>
 
-
-        <div className={inBasket ? "basket" : "not-in-basket"}
-          onClick={() => addBasket(_id)}
-        >
-          🛒
-            </div>
-
-      </div>
+        {
+          checked && (<div className="check-mark">✓</div>)
+        }
+      </div >
     );
   }
 }
 
-export default Grc;
+export default ShopItem;

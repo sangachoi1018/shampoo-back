@@ -1,24 +1,22 @@
 import React, { Component } from "react";
 
-import Grc from "./Grc"
+import ShopItem from "./ShopItem"
 
 import "./ShoppingList.css"
 
 
-export default class GrcList extends Component {
+export default class ShopItemList extends Component {
   render() {
-    const { items, onToggle, onRemove, addBasket } = this.props;
-    
+    const { items, onToggle, onRemove } = this.props;
     const itemList =
       items.length ?
         items.map(
           item => (
-            <Grc
+            <ShopItem
               item={item}
               key={item._id}
               onClick={onToggle}
               onRemove={onRemove}
-              addBasket={addBasket}
             />)
         ) : <p>아직 아무것도 없어요 :(</p>;
 

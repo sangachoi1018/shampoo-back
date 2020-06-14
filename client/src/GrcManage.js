@@ -19,12 +19,16 @@ class GrcManage extends Component {
 
   render() {
     const { selectedItem } = this.state;
+    const { removeFromBasket } = this.props;
     const { handleSelector } = this;
 
     return (
       <div>
-        <GrcChips handleSelector={handleSelector}/>
-        <Record name={selectedItem.name} entries={selectedItem.entries} _id={selectedItem._id} />
+        <GrcChips
+          handleSelector={handleSelector}
+          removeFromBasket={removeFromBasket} />
+
+        <Record selectedItem={selectedItem} />
       </div>
     )
   }
