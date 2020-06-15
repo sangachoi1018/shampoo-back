@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import ShopItem from "./ShopItem"
 
-import "./ShoppingList.css"
+import "../styles/ItemList.css"
 
 
 export default class ShopItemList extends Component {

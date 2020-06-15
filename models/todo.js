@@ -13,6 +13,10 @@ const todoSchema = new mongoose.Schema({
     default: false,
     required: true,
   },
+  grcId: {
+    type: Object,
+    required: true,
+  }
 });
 
 const todoModel = mongoose.model("Todo", todoSchema);

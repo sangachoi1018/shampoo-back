@@ -2,13 +2,19 @@ import React, { Component } from "react";
 
 import Grc from "./Grc"
 
-import "./ShoppingList.css"
+import "../styles/ItemList.css"
 
 
 export default class GrcList extends Component {
+
+  componentWillReceiveProps({ basket }) {
+    this.setState({ ...this.state, basket })
+  }
+
+
   render() {
-    const { items, onToggle, onRemove, addBasket } = this.props;
-    
+    const { items, onToggle, onRemove, removeFromBasket, addToBasket, basket } = this.props;
+
     const itemList =
       items.length ?
         items.map(
@@ -18,7 +24,9 @@ export default class GrcList extends Component {
               key={item._id}
               onClick={onToggle}
               onRemove={onRemove}
-              addBasket={addBasket}
+              removeFromBasket={removeFromBasket}
+              addToBasket={addToBasket}
+              basket={basket}
             />)
         ) : <p>아직 아무것도 없어요 :(</p>;
 

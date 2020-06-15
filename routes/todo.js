@@ -14,7 +14,7 @@ router.get("/", async (req, res, next) => {
     const todos = await db.Todo.find({});
     return success(res, todos);
   } catch (err) {
-    next({ status: 400, message: "failed to get todos" });
+    next({ status: 400, message: "failed to get basket" });
   }
 });
 
@@ -23,26 +23,27 @@ router.post("/", async (req, res, next) => {
     const todo = await db.Todo.create(req.body);
     return success(res, todo);
   } catch (err) {
-    next({ status: 400, message: "failed to create todo" });
+    next({ status: 400, message: "failed to create an item in basket" });
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.post("/:id", async (req, res, next) => {
   try {
     const todo = await db.Todo.findByIdAndUpdate(req.params.id, req.body, {
       new: true
     });
     return success(res, todo);
   } catch (err) {
-    next({ status: 400, message: "failed to update todo" });
+     
+    next({ status: 400, message: "failed to update an item in basket" });
   }
 });
 router.delete("/:id", async (req, res, next) => {
   try {
     await db.Todo.findByIdAndRemove(req.params.id);
-    return success(res, "todo deleted!");
+    return success(res, "item deleted!");
   } catch (err) {
-    next({ status: 400, message: "failed to delete todo" });
+    next({ status: 400, message: "failed to delete an item in basket" });
   }
 });
 

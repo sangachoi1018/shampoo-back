@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios"
-import "./ShoppingList.css"
 import GrcState from "./GrcState"
 import EntryList from "./EntryList"
-import Form from "./Form"
+import Form from "../Form"
+
+import "../styles/ItemList.css"
+
 const API_URL = "http://localhost:3000/grc/"
 
 export default class Record extends Component {
@@ -11,22 +13,16 @@ export default class Record extends Component {
     input: '',
   }
 
-  // shouldComponentUpdate(nextProps) {
-  //   return nextProps.selectedItem !== this.props.selectedItem
-  // }  
-
-
   handleChange = (e) => {
     this.setState({
       input: e.target.value // input 의 다음 바뀔 값
     });
   }
 
-
   handleCreate = () => {
     const { input } = this.state;
     const { selectedItem } = this.props;
-    const { name, entries, _id } = selectedItem;
+    const { entries, _id } = selectedItem;
     if (!input) {
       alert("뭔가 입력한 후 추가해주세요");
       return;
@@ -42,9 +38,6 @@ export default class Record extends Component {
 
     axios.put(`${API_URL}${_id}/entries`, { date: new Date(input), unit: 1, memo: "" })
       .then(res => {
-        const newEntries = res.data
-        console.log(newEntries);
-
         this.setState({
           input: '',
         });
@@ -53,31 +46,36 @@ export default class Record extends Component {
   }
 
   handleKeyPress = (e) => {
-    // 눌려진 키가 Enter 면 handleCreate 호출
     if (e.key === 'Enter') {
       this.handleCreate();
     }
   }
 
-  handleRemove = (id) => {
-    // DELETE
-    console.log("delete a date " + id);
+  handleRemove = (entryId) => {
+    const { selectedItem } = this.props;
+    const { entries, _id } = selectedItem;
+    const newEntries = entries.filter(entry => entry._Id !== entryId)
+    const newSelectedItem = {...selectedItem, entries: newEntries}; 
 
+    // TODO: axios delete : entry 제거
+    axios.delete(`${API_URL}${_id}/entries/${entryId}`)
+    .then(res => {
+      this.setState({
+        selectedItem: newSelectedItem
+      })
+
+    })
 
   }
 
-
-
   render() {
     const { selectedItem } = this.props;
-    const { name, entries, _id } = selectedItem;
     const { input } = this.state;
     const {
       handleChange,
       handleCreate,
       handleKeyPress,
-      handleRemove,
-      handleToggle
+      handleRemove
     } = this;
 
 
@@ -86,7 +84,7 @@ export default class Record extends Component {
         <h1>기록장</h1>
         <GrcState selectedItem={selectedItem} />
 
-        {name ?
+        {selectedItem.entries ?
           <div>
             <Form
               value={input}
@@ -96,9 +94,7 @@ export default class Record extends Component {
             />
 
             <EntryList
-              entries={entries}
               selectedItem={selectedItem}
-              onToggle={handleToggle}
               onRemove={handleRemove}
             />
           </div>

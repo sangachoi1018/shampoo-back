@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import './Item.css';
+import "../styles/Item.css"
 
 class ShopItem extends Component {
 
   render() {
     const { item, onClick, onRemove } = this.props;
     const { text, checked, _id } = item;
-
 
     return (
       <div
@@ -17,7 +16,7 @@ class ShopItem extends Component {
 
         <div className="remove" onClick={(e) => {
           e.stopPropagation(); // onToggle 이 실행되지 않도록 함
-          onRemove(_id)
+          onRemove(item)
         }
         }>&times;</div>
 

@@ -25,7 +25,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
+  try {
+    const grc = await db.Grc.findById(req.params.id, function (err, user) {});
+    return success(res, grc);
+  } catch (err) {
+    next({ status: 400, message: "failed to get a grocery" });
+  }
+});
+
+router.post("/:id", async (req, res, next) => {
   try {
     const grc = await db.Grc.findByIdAndUpdate(req.params.id, req.body, {
       new: true

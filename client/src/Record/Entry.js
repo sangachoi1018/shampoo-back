@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import './Item.css';
+import '../styles/Item.css';
 
 class Entry extends Component {
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.date !== nextProps.date;
-  }
-
-
   render() {
-    const { date, id, onToggle, onRemove } = this.props;
+    const { date, id, onRemove } = this.props;
 
     return (
       <div className="todo-item">

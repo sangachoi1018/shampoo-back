@@ -8,7 +8,7 @@ export default class GrcState extends Component {
 
   render() {
     const { selectedItem } = this.props;
-    const { name, entries, _id } = selectedItem;
+    const name = selectedItem.name;
 
     return (
       <div>
