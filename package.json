@@ -1,0 +1,35 @@
+{
+  "name": "shampoo-back",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run start\" \"cd client && yarn start\""
+  },
+  "dependencies": {
+    "concurrently": "^5.2.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "create-react-app": "^3.4.1",
+    "debug": "~2.6.9",
+    "express": "^4.16.4",
+    "mongoose": "^5.9.18",
+    "morgan": "~1.9.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
+  },
+  "description": "Backend of shampoo project",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sangachoi1018/shampoo-back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sangachoi1018/shampoo-back/issues"
+  },
+  "homepage": "https://github.com/sangachoi1018/shampoo-back#readme"
+}
