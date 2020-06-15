@@ -4,9 +4,9 @@ import Entry from "./Entry"
 export default class EntryList extends Component {
 
 
-  shouldComponentUpdate(nextProps) {
-    return nextProps.selectedItem !== this.props.selectedItem
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   return nextProps.selectedItem !== this.props.selectedItem
+  // }
 
 
   render() {

@@ -21,7 +21,7 @@ export default class Record extends Component {
 
   handleCreate = () => {
     const { input } = this.state;
-    const { selectedItem } = this.props;
+    const { selectedItem, updateEntries } = this.props;
     const { entries, _id } = selectedItem;
     if (!input) {
       alert("뭔가 입력한 후 추가해주세요");
@@ -41,6 +41,8 @@ export default class Record extends Component {
         this.setState({
           input: '',
         });
+        updateEntries(res.data);
+        
       })
 
   }
@@ -52,18 +54,18 @@ export default class Record extends Component {
   }
 
   handleRemove = (entryId) => {
-    const { selectedItem } = this.props;
+    const { selectedItem, updateEntries } = this.props;
     const { entries, _id } = selectedItem;
-    const newEntries = entries.filter(entry => entry._Id !== entryId)
+    const newEntries = entries.filter(entry => entry._id !== entryId)
+    
     const newSelectedItem = {...selectedItem, entries: newEntries}; 
+    
 
+    
     // TODO: axios delete : entry 제거
     axios.delete(`${API_URL}${_id}/entries/${entryId}`)
     .then(res => {
-      this.setState({
-        selectedItem: newSelectedItem
-      })
-
+      updateEntries(newSelectedItem)
     })
 
   }

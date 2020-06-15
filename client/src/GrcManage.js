@@ -15,14 +15,13 @@ class GrcManage extends Component {
   state = {
     selectedItem: {},
     basket: [],
-    grcItems: [] // item in grc
+    items: []
   }
 
   addToBasket = (item) => {
     // item = grcItem (우유, 계란 같이 grc DB에 저장되어있는 객체)
     const itemName = item.name;
-    console.log(`Add ${itemName}`);
-    
+
     const itemId = item._id;
     const { basket } = this.state;
     let toShopItemId = null;
@@ -33,23 +32,20 @@ class GrcManage extends Component {
       .then(res => {
         toShopItemId = res.data._id;
         console.log(toShopItemId);
-        
+
       })
-    
+
     // TODO: put axios, grc db에 변경, inBasket 바꾸기
     axios.post(`${API_URL}${itemId}`, { ...item, inBasket: true })
       .then(() => {
-        const newBasket = [...basket, { text: itemName, _id: toShopItemId, checked: false, grcId: itemId }];
-        console.log(`basket set: ${newBasket}`);
-        
-        this.setState({ // basket 상태 바꾸기
-          basket: newBasket
-        })
 
-        console.log(`new basket`);
-        console.log(this.state.basket);
-        
-      })      
+        this.setState((prevState, props) => ({ // basket 상태 바꾸기
+          basket: [...prevState.basket,
+          { text: itemName, _id: toShopItemId, checked: false, grcId: itemId }]
+        }))
+
+
+      })
 
   }
 
@@ -57,29 +53,31 @@ class GrcManage extends Component {
   removeBasketItem = (item) => {
 
     const itemId = item._id
-    const itemName = item.name
+    const itemName = item.text
     console.log(`Remove ${itemName}`);
 
     const { basket } = this.state;
     let grcId = item.grcId;
+    console.log(grcId);
+    
 
-    // // TODO: delete axios, todo db에서 삭제
-    // axios.delete(`${BASKET_API_URL}${itemId}`)
-    //   .then(() => {
-    //     console.log(`${itemName} deleted`);
-    //   })
+    // TODO: delete axios, todo db에서 삭제
+    axios.delete(`${BASKET_API_URL}${itemId}`)
+      .then(() => {
+        console.log(`${itemName} deleted`);
+      })
 
 
-    // // TODO: put axios, grc db에서 변경
-    // // inBasket 상태 바꾸기
-    // axios.put(`${API_URL}${grcId}`, { ...item, inBasket: false })
-    //   .then(() => {
-    //     // basket 상태 바꾸기
-    //     const newBasket = [...basket, { ...item, inBasket: false }];
-    //     this.setState({
-    //       basket: newBasket
-    //     });
-    //   })
+    // TODO: put axios, grc db에서 변경
+    // inBasket 상태 바꾸기
+    axios.post(`${API_URL}${grcId}`, { ...item, inBasket: false })
+      .then(() => {
+        // basket 상태 바꾸기
+        const newBasket = basket.filter(basketItem => basketItem.name !== itemName)
+        this.setState({
+          basket: newBasket
+        });
+      })
 
   }
 
@@ -162,21 +160,53 @@ class GrcManage extends Component {
       .then(res => {
         const basket = res.data;
         console.log(basket);
-  
+
         this.setState({ basket });
       })
 
     axios.get(API_URL)
       .then(res => {
-        const grcItems = res.data;
+        const items = res.data;
         console.log(items);
         this.setState({ items });
       })
   }
 
+  handleCreateGrc = (input) => {
+    const { items } = this.state;
+
+    axios.post(API_URL, { name: input, entries: [], inBasket: false })
+      .then(res => {
+        const newItems = [...items, res.data]
+        this.setState({
+          input: '',
+          items: newItems
+        });
+      })
+  }
+
+  handleRemoveGrc = (id) => {
+    const { items } = this.state;
+    axios.delete(`${API_URL}${id}`)
+      .then(res => {
+        const newItems = items.length ? items.filter(
+          item => item._id.toString() !== id.toString()) : []
+        this.setState({
+          items: newItems
+        });
+      })
+  }
+
+  updateEntries = (newSelectedItem) => {
+    this.setState({
+      selectedItem: newSelectedItem
+    })
+  }
+
   render() {
-    const { selectedItem, basket } = this.state;
-    const { handleSelector, addToBasket, removeFromBasket, handleCheck, removeBasketItem } = this;
+    const { selectedItem, basket, items } = this.state;
+    const { handleSelector, addToBasket, removeFromBasket,
+      handleCheck, handleCreateGrc, removeBasketItem } = this;
 
     return (
       <div>
@@ -191,9 +221,13 @@ class GrcManage extends Component {
           basket={basket}
           removeFromBasket={removeFromBasket}
           addToBasket={addToBasket}
+          items={items}
+          handleCreateGrc={handleCreateGrc}
         />
 
-        <Record selectedItem={selectedItem} />
+        <Record selectedItem={selectedItem} 
+        updateEntries={this.updateEntries}
+        />
       </div>
     )
   }

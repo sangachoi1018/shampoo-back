@@ -7,10 +7,6 @@ import "../styles/ItemList.css"
 
 export default class GrcList extends Component {
 
-  componentWillReceiveProps({ basket }) {
-    this.setState({ ...this.state, basket })
-  }
-
 
   render() {
     const { items, onToggle, onRemove, removeFromBasket, addToBasket, basket } = this.props;

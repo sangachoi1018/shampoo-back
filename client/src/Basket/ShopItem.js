@@ -16,9 +16,10 @@ class ShopItem extends Component {
 
         <div className="remove" onClick={(e) => {
           e.stopPropagation(); // onToggle 이 실행되지 않도록 함
+          console.log(item);
+          
           onRemove(item)
-        }
-        }>&times;</div>
+        }}>&times;</div>
 
         <div className={`todo-text ${checked && 'checked'}`}>
           {text}

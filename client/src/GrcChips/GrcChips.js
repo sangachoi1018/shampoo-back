@@ -13,7 +13,6 @@ class GrcChips extends Component {
 
   state = {
     input: '',
-    items: {}
   }
 
   handleChange = (e) => {
@@ -23,7 +22,8 @@ class GrcChips extends Component {
   }
 
   handleCreate = () => {
-    const { input, items } = this.state;
+    const { input } = this.state;
+    const { handleCreateGrc, items } = this.props;
 
     if (!input) {
       alert("please enter something");
@@ -38,15 +38,10 @@ class GrcChips extends Component {
       return;
     }
 
-    // POST axios
-    axios.post(API_URL, { name: input, entries: [], inBasket: false })
-      .then(res => {
-        const newItems = [...items, res.data]
-        this.setState({
-          input: '',
-          items: newItems
-        });
-      })
+    handleCreateGrc(input)
+    this.setState({
+      input: ''
+    })
 
   }
 
@@ -57,7 +52,7 @@ class GrcChips extends Component {
   }
 
   handleToggle = (id) => {
-    const { items } = this.state;
+    const { items } = this.props;
     const index = items.findIndex(item =>
       item._id.toString() === id.toString());
     const selected = items[index]; // 선택한 객체  
@@ -65,38 +60,14 @@ class GrcChips extends Component {
   }
 
 
-
-  handleRemove = (id) => {
-    const { items } = this.state;
-    axios.delete(`${API_URL}${id}`)
-      .then(res => {
-        const newItems = items.filter(
-          item => item._id.toString() !== id.toString());
-        this.setState({
-          items: newItems
-        });
-      })
-  }
-
-  componentDidMount() {
-    axios.get(API_URL)
-      .then(res => {
-        const items = res.data;
-        console.log(items);
-        this.setState({ items });
-      })
-  }
-
-
   render() {
-    const { input, items } = this.state;
-    const { removeFromBasket, addToBasket, basket } = this.props;
+    const { input } = this.state;
+    const { removeFromBasket, addToBasket, basket, items, handleRemoveGrc } = this.props;
 
     const {
       handleChange,
       handleCreate,
       handleKeyPress,
-      handleRemove,
       handleToggle,
     } = this;
 
@@ -114,7 +85,7 @@ class GrcChips extends Component {
           items={items}
           basket={basket}
           onToggle={handleToggle}
-          onRemove={handleRemove}
+          onRemove={handleRemoveGrc}
           removeFromBasket={removeFromBasket}
           addToBasket={addToBasket}
         />
