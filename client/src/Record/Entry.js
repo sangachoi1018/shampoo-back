@@ -6,6 +6,8 @@ class Entry extends Component {
   render() {
     const { date, id, onRemove } = this.props;
 
+    const onlyDate = date.split('T')[0]
+    
     return (
       <div className="todo-item">
         <div className="remove" onClick={(e) => {
@@ -14,7 +16,9 @@ class Entry extends Component {
         }
         }>&times;</div>
 
-        <div>{date}</div>
+        <div>
+          {onlyDate}
+        </div>
       </div>
     );
   }

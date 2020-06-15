@@ -31,7 +31,6 @@ class GrcManage extends Component {
     axios.post(BASKET_API_URL, { text: itemName, checked: false, grcId: itemId })
       .then(res => {
         toShopItemId = res.data._id;
-        console.log(toShopItemId);
 
       })
 
@@ -54,12 +53,9 @@ class GrcManage extends Component {
 
     const itemId = item._id
     const itemName = item.text
-    console.log(`Remove ${itemName}`);
 
     const { basket } = this.state;
-    let grcId = item.grcId;
-    console.log(grcId);
-    
+    let grcId = item.grcId;    
 
     // TODO: delete axios, todo db에서 삭제
     axios.delete(`${BASKET_API_URL}${itemId}`)
